@@ -33,6 +33,9 @@ exports.register = async (req, res) => {
     const user = await User.create({ name, email, password });
     const token = generateToken(user._id);
 
+    user.token = token;
+    await user.save();
+
     res.status(201).json({
       token,
       user: { id: user._id, name: user.name, email: user.email },
@@ -57,6 +60,9 @@ exports.login = async (req, res) => {
     }
 
     const token = generateToken(user._id);
+
+    user.token = token;
+    await user.save();
 
     res.json({
       token,
